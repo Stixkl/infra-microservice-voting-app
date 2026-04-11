@@ -1,0 +1,10 @@
+aws_region   = "us-east-1"
+project_name = "voting-app"
+environment  = "shared"
+
+service_images = {
+  vote   = "123456789012.dkr.ecr.us-east-1.amazonaws.com/voting-app/vote:latest"
+  worker = "123456789012.dkr.ecr.us-east-1.amazonaws.com/voting-app/worker:latest"
+  result = "123456789012.dkr.ecr.us-east-1.amazonaws.com/voting-app/result:latest"
+}
+
