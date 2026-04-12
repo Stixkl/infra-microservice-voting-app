@@ -22,3 +22,18 @@ variable "service_images" {
   }
 }
 
+variable "db_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "kafka_host" {
+  type    = string
+  default = "kafka.voting-app-dev.local:9092"
+}
+
+variable "kafka_image" {
+  type    = string
+  default = "bitnami/kafka:3.7"
+}
+

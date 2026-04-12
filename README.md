@@ -9,7 +9,7 @@ Este repositorio contiene la base de infraestructura para desplegar en AWS la ap
 | `vote` | Servicio contenedorizado en ECS |
 | `worker` | Servicio contenedorizado en ECS |
 | `result` | Servicio contenedorizado en ECS |
-| `kafka` | Amazon MSK |
+| `kafka` | Broker Kafka autogestionado (host configurable) |
 | `postgresql` | Amazon RDS PostgreSQL |
 
 ## Estructura creada
@@ -27,7 +27,6 @@ infra-microservice-voting-app/
 │   │   ├── ecr/
 │   │   ├── ecs-services/
 │   │   ├── rds/
-│   │   └── msk/
 │   ├── main.tf
 │   ├── variables.tf
 │   ├── outputs.tf
@@ -64,3 +63,5 @@ Para Terraform:
 ```
 
 Antes de ejecutar Terraform, actualiza `backend.hcl` y `terraform.tfvars` según tu cuenta de AWS.
+
+Kafka se despliega en ECS como servicio interno y se resuelve por DNS privado.
