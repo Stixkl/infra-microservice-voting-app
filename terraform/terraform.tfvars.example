@@ -1,6 +1,7 @@
 aws_region   = "us-east-1"
 project_name = "voting-app"
 environment  = "shared"
+public_ingress_cidrs = ["0.0.0.0/0"]
 
 service_images = {
   vote   = "572590827476.dkr.ecr.us-east-1.amazonaws.com/voting-app/vote:latest"

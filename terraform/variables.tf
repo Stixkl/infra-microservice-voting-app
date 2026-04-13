@@ -43,3 +43,8 @@ variable "kafka_image" {
   type    = string
   default = "confluentinc/cp-kafka:7.7.8"
 }
+
+variable "public_ingress_cidrs" {
+  type    = list(string)
+  default = ["0.0.0.0/0"]
+}

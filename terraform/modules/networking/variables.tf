@@ -21,3 +21,7 @@ variable "private_subnet_cidrs" {
   default = ["10.0.11.0/24", "10.0.12.0/24"]
 }
 
+variable "public_ingress_cidrs" {
+  type    = list(string)
+  default = ["0.0.0.0/0"]
+}
