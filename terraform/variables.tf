@@ -10,7 +10,7 @@ variable "project_name" {
 
 variable "environment" {
   type    = string
-  default = "shared"
+  default = "dev"
 }
 
 variable "service_images" {
@@ -23,17 +23,23 @@ variable "service_images" {
 }
 
 variable "db_password" {
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
+  description = "Database password. No default is provided. For local runs, export TF_VAR_db_password before invoking Terraform or the helper scripts (for example: export TF_VAR_db_password='your-password')."
+
+  validation {
+    condition     = length(trimspace(var.db_password)) > 0
+    error_message = "The db_password variable is required. For local runs, export TF_VAR_db_password before invoking Terraform or the helper scripts."
+  }
 }
 
 variable "kafka_host" {
-  type    = string
-  default = "kafka.voting-app-dev.local:9092"
+  type        = string
+  default     = null
+  description = "Kafka broker address. Defaults to 'kafka.<project_name>-<environment>.local:9092' if not set."
 }
 
 variable "kafka_image" {
   type    = string
   default = "bitnami/kafka:3.7"
 }
-
