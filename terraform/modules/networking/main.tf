@@ -79,19 +79,19 @@ resource "aws_security_group" "ecs" {
   vpc_id      = aws_vpc.this.id
 
   ingress {
-    description = "Allow vote service from within the VPC"
+    description = "Allow vote service from configured public CIDRs"
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = [var.vpc_cidr]
+    cidr_blocks = var.public_ingress_cidrs
   }
 
   ingress {
-    description = "Allow result service from within the VPC"
+    description = "Allow result service from configured public CIDRs"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = [var.vpc_cidr]
+    cidr_blocks = var.public_ingress_cidrs
   }
 
   ingress {
@@ -138,4 +138,3 @@ resource "aws_security_group" "rds" {
     Name = "${local.name_prefix}-rds-sg"
   }
 }
-

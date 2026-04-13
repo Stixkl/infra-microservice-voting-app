@@ -21,9 +21,10 @@ locals {
 }
 
 module "networking" {
-  source       = "./modules/networking"
-  project_name = var.project_name
-  environment  = var.environment
+  source               = "./modules/networking"
+  project_name         = var.project_name
+  environment          = var.environment
+  public_ingress_cidrs = var.public_ingress_cidrs
 }
 
 module "ecr" {
@@ -57,4 +58,3 @@ module "ecs_services" {
   db_username           = module.rds.db_username
   db_password           = var.db_password
 }
-
