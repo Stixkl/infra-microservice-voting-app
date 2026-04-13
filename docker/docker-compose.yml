@@ -13,7 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   kafka:
-    image: bitnami/kafka:3.7
+    image: bitnami/kafka:3.7.0
     environment:
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
@@ -65,4 +65,3 @@ services:
 
 volumes:
   postgres_data:
-
