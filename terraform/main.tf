@@ -17,6 +17,7 @@ provider "aws" {
 
 locals {
   service_names = ["vote", "worker", "result"]
+  kafka_host    = var.kafka_host != null ? var.kafka_host : "kafka.${var.project_name}-${var.environment}.local:9092"
 }
 
 module "networking" {
@@ -50,7 +51,7 @@ module "ecs_services" {
   subnet_ids            = module.networking.public_subnet_ids
   vpc_id                = module.networking.vpc_id
   ecs_security_group_id = module.networking.ecs_security_group_id
-  kafka_host            = var.kafka_host
+  kafka_host            = local.kafka_host
   db_host               = module.rds.db_endpoint
   db_name               = module.rds.db_name
   db_username           = module.rds.db_username

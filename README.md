@@ -65,3 +65,25 @@ Para Terraform:
 Antes de ejecutar Terraform, actualiza `backend.hcl` y `terraform.tfvars` según tu cuenta de AWS.
 
 Kafka se despliega en ECS como servicio interno y se resuelve por DNS privado.
+
+## CI/CD de infraestructura (GitHub Actions)
+
+- `Terraform Validate` (`.github/workflows/terraform-validate.yml`)
+  - Se ejecuta en PR hacia `staging` y `main`.
+  - Corre `fmt`, `init`, `validate` y `plan`.
+  - Publica resumen del plan en el summary del job.
+
+- `Terraform Apply` (`.github/workflows/terraform-apply.yml`)
+  - Se ejecuta en push a `staging` y `main`.
+  - Aplica cambios de Terraform automáticamente.
+  - Usa `environment: staging` y `environment: production` para controles de aprobación.
+
+Secrets requeridos:
+
+- `AWS_ROLE_TO_ASSUME`
+- `TF_VAR_DB_PASSWORD`
+
+Variables de repositorio requeridas:
+
+- `TF_STATE_BUCKET`
+- `TF_LOCK_TABLE`

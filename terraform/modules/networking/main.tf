@@ -79,19 +79,19 @@ resource "aws_security_group" "ecs" {
   vpc_id      = aws_vpc.this.id
 
   ingress {
-    description = "Allow vote service"
+    description = "Allow vote service from within the VPC"
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.vpc_cidr]
   }
 
   ingress {
-    description = "Allow result service"
+    description = "Allow result service from within the VPC"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.vpc_cidr]
   }
 
   ingress {
