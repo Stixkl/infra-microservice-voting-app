@@ -41,5 +41,5 @@ variable "kafka_host" {
 
 variable "kafka_image" {
   type    = string
-  default = "bitnami/kafka:3.7.0"
+  default = "confluentinc/cp-kafka:7.7.8"
 }
