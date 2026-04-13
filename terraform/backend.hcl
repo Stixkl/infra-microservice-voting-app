@@ -1,6 +1,5 @@
-bucket         = "replace-with-your-tfstate-bucket"
+bucket         = "<YOUR_TFSTATE_BUCKET>"
 key            = "voting-app/terraform.tfstate"
 region         = "us-east-1"
-dynamodb_table = "replace-with-your-lock-table"
+dynamodb_table = "<YOUR_TFLOCK_TABLE>"
 encrypt        = true
-
