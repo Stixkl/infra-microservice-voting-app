@@ -16,9 +16,9 @@ variable "environment" {
 variable "service_images" {
   type = map(string)
   default = {
-    vote   = "123456789012.dkr.ecr.us-east-1.amazonaws.com/voting-app/vote:latest"
-    worker = "123456789012.dkr.ecr.us-east-1.amazonaws.com/voting-app/worker:latest"
-    result = "123456789012.dkr.ecr.us-east-1.amazonaws.com/voting-app/result:latest"
+    vote   = "572590827476.dkr.ecr.us-east-1.amazonaws.com/voting-app/vote:latest"
+    worker = "572590827476.dkr.ecr.us-east-1.amazonaws.com/voting-app/worker:latest"
+    result = "572590827476.dkr.ecr.us-east-1.amazonaws.com/voting-app/result:latest"
   }
 }
 
