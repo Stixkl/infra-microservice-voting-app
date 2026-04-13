@@ -17,7 +17,6 @@ provider "aws" {
 
 locals {
   service_names = ["vote", "worker", "result"]
-  kafka_host    = var.kafka_host != null ? var.kafka_host : "kafka.${var.project_name}-${var.environment}.local:9092"
 }
 
 module "networking" {
@@ -33,28 +32,22 @@ module "ecr" {
 }
 
 module "rds" {
-  source                = "./modules/rds"
-  project_name          = var.project_name
-  environment           = var.environment
-  db_password           = var.db_password
-  private_subnet_ids    = module.networking.private_subnet_ids
-  rds_security_group_id = module.networking.rds_security_group_id
+  source       = "./modules/rds"
+  project_name = var.project_name
+  environment  = var.environment
+}
+
+module "msk" {
+  source       = "./modules/msk"
+  project_name = var.project_name
+  environment  = var.environment
 }
 
 module "ecs_services" {
-  source                = "./modules/ecs-services"
-  project_name          = var.project_name
-  environment           = var.environment
-  service_names         = local.service_names
-  service_images        = var.service_images
-  kafka_image           = var.kafka_image
-  subnet_ids            = module.networking.public_subnet_ids
-  vpc_id                = module.networking.vpc_id
-  ecs_security_group_id = module.networking.ecs_security_group_id
-  kafka_host            = local.kafka_host
-  db_host               = module.rds.db_endpoint
-  db_name               = module.rds.db_name
-  db_username           = module.rds.db_username
-  db_password           = var.db_password
+  source         = "./modules/ecs-services"
+  project_name   = var.project_name
+  environment    = var.environment
+  service_names  = local.service_names
+  service_images = var.service_images
 }
 
