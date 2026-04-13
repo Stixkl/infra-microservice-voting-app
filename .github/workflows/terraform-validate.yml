@@ -1,0 +1,56 @@
+name: Terraform Validate
+
+on:
+  pull_request:
+    branches: [staging, main]
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  validate-plan:
+    name: Terraform format, validate and plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.5
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform fmt check
+        run: terraform -chdir=terraform fmt -check -recursive
+
+      - name: Terraform init
+        run: terraform -chdir=terraform init -backend-config=backend.hcl
+
+      - name: Terraform validate
+        run: terraform -chdir=terraform validate
+
+      - name: Terraform plan
+        run: terraform -chdir=terraform plan -input=false -no-color -var="db_password=${{ secrets.TF_VAR_DB_PASSWORD }}" -out=tfplan
+
+      - name: Publish plan summary
+        run: |
+          terraform -chdir=terraform show -no-color tfplan > plan.txt
+          {
+            echo "## Terraform Plan"
+            echo ""
+            echo '```hcl'
+            head -n 400 plan.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
