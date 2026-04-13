@@ -82,3 +82,8 @@ Secrets requeridos:
 
 - `AWS_ROLE_TO_ASSUME`
 - `TF_VAR_DB_PASSWORD`
+
+Variables de repositorio requeridas:
+
+- `TF_STATE_BUCKET`
+- `TF_LOCK_TABLE`
