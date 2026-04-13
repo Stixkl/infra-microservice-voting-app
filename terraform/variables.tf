@@ -10,7 +10,7 @@ variable "project_name" {
 
 variable "environment" {
   type    = string
-  default = "shared"
+  default = "dev"
 }
 
 variable "service_images" {
@@ -43,4 +43,3 @@ variable "kafka_image" {
   type    = string
   default = "bitnami/kafka:3.7"
 }
-
