@@ -12,6 +12,10 @@ locals {
 
 data "aws_region" "current" {}
 
+data "aws_kms_alias" "ssm" {
+  name = "alias/aws/ssm"
+}
+
 resource "aws_cloudwatch_log_group" "services" {
   name              = "/ecs/${var.project_name}-${var.environment}"
   retention_in_days = 14
@@ -41,6 +45,33 @@ resource "aws_iam_role" "task_execution" {
 resource "aws_iam_role_policy_attachment" "task_execution" {
   role       = aws_iam_role.task_execution.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_ssm_parameter" "db_password" {
+  name  = "/${var.project_name}/${var.environment}/db_password"
+  type  = "SecureString"
+  value = var.db_password
+}
+
+resource "aws_iam_role_policy" "task_execution_ssm" {
+  name = "${var.project_name}-${var.environment}-ecs-task-exec-ssm"
+  role = aws_iam_role.task_execution.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["ssm:GetParameters"]
+        Resource = [aws_ssm_parameter.db_password.arn]
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["kms:Decrypt"]
+        Resource = [data.aws_kms_alias.ssm.target_key_arn]
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role" "task" {
@@ -106,13 +137,15 @@ resource "aws_ecs_task_definition" "service" {
           {
             name  = "POSTGRES_USER"
             value = var.db_username
-          },
-          {
-            name  = "POSTGRES_PASSWORD"
-            value = var.db_password
           }
         ] : []
       )
+      secrets = each.value == "worker" || each.value == "result" ? [
+        {
+          name      = "POSTGRES_PASSWORD"
+          valueFrom = aws_ssm_parameter.db_password.arn
+        }
+      ] : []
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -166,7 +199,7 @@ resource "aws_ecs_task_definition" "kafka" {
         },
         {
           name  = "KAFKA_CFG_ADVERTISED_LISTENERS"
-          value = "PLAINTEXT://kafka:9092"
+          value = "PLAINTEXT://${var.kafka_host}"
         },
         {
           name  = "KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP"

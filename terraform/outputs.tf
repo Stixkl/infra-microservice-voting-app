@@ -11,7 +11,7 @@ output "db_identifier" {
 }
 
 output "kafka_host" {
-  value = var.kafka_host
+  value = local.kafka_host
 }
 
 output "kafka_service_name" {

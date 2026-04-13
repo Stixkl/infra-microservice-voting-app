@@ -23,8 +23,8 @@ resource "aws_db_instance" "this" {
   db_subnet_group_name   = aws_db_subnet_group.this.name
   vpc_security_group_ids = [var.rds_security_group_id]
   publicly_accessible    = false
-  skip_final_snapshot    = true
-  deletion_protection    = false
+  skip_final_snapshot    = var.environment == "dev"
+  deletion_protection    = var.environment != "dev"
 
   tags = {
     Name = local.db_identifier
